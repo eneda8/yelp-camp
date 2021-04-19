@@ -3,7 +3,7 @@ const router = express.Router();
 const passport = require("passport");
 const catchAsync = require("../utils/catchAsync");
 const User = require("../models/user");
-// const {notLoggedIn} = require("../middleware");
+
 
 router.get("/register", (req, res) => {
     if (req.isAuthenticated()) {
