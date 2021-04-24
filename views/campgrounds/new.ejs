@@ -2,7 +2,7 @@
 <div class="row">
     <h1 class="text-center">New Campground</h1>
     <div class="col-6 offset-3">
-        <form action="/campgrounds" method="POST" novalidate class="validated-form">
+        <form action="/campgrounds" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
             <div class="mb-3">
                 <label class="form-label" for="title">Title</label>
                 <input class="form-control" type="text" id="title" name="campground[title]" required >
@@ -14,30 +14,33 @@
                 <div class="valid-feedback">Looks good!</div>
             </div>
             <div class="mb-3">
-                <label class="form-label" for="image">Image URL</label>
-                <input class="form-control" type="text" id="image" name="campground[image]" required>
-                <div class="valid-feedback">Looks good!</div>
-            </div>
-            <div class="mb-3">
                 <label class="form-label" for="price">Campground Price</label>
                 <div class="input-group">
                     <span class="input-group-text" id="price-label">$</span>
-                    <input type="text" class="form-control" placeholder="0" aria-label="Price (to the nearest dollar)"name="campground[price]" required >
-                    <span class="input-group-text">.00</span>
-                  </div>
-                  <div class="valid-feedback">Looks good!</div>
+                    <input type="text" class="form-control" id="price" placeholder="0.00" aria-label="price"
+                        aria-describedby="price-label" name="campground[price]" required>
+                </div>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
             </div>
-            
             <div class="mb-3">
                 <label class="form-label" for="description">Description</label>
                 <textarea class="form-control" type="text" id="description" name="campground[description]" required></textarea>
                 <div class="valid-feedback">Looks good!</div>
             </div>
             <div class="mb-3">
-                <button class="btn btn-success">Add Campground</button>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="image" name="image" multiple onchange="document.getElementById('preview').src = window.URL.createObjectURL(this.files[0])">
+                    <label class="custom-file-label" for="customFile">Choose image...</label>
+                </div>
+                <img class="img-fluid my-2" id="preview" width="100px"/> 
+                <div class="">
+                    <button class="btn btn-success">Add Campground</button>
+                </div>           
             </div>
+                <a href="/campgrounds">All Campgrounds</a>  
         </form>
-        <a href="/campgrounds">All Campgrounds</a>
     </div>
 </div>
 

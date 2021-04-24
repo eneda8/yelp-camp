@@ -1,4 +1,6 @@
 const Campground = require("../models/campground");
+const ObjectID = require('mongodb').ObjectID;
+const {cloudinary} = require("../cloudinary");
 
 module.exports.index = async (req, res) => {
     const campgrounds = await Campground.find({}); 
@@ -11,13 +13,21 @@ res.render("campgrounds/new")
 
 module.exports.createCampground = async (req, res, next) => {
     const campground = new Campground(req.body.campground);
+    campground.images = req.files.map(f => ({url: f.path, filename: f.filename}));
     campground.author = req.user._id;
     await campground.save();
+    console.log(`Campground created: ${campground}`)
     req.flash("success", "New campground added!");
     res.redirect(`/campgrounds/${campground._id}`)
 }
 
-module.exports.showCampground = async (req,res) => { 
+module.exports.showCampground = async (req,res, next) => { 
+    try {
+        const {id} = req.params;
+        if (!ObjectID.isValid(id)) {
+            req.flash("error", "Campground not found!")
+            return res.redirect("/campgrounds");
+        }
     const campground = await Campground.findById(req.params.id).populate({
         path: "reviews",
         populate: {
@@ -28,8 +38,11 @@ module.exports.showCampground = async (req,res) => {
     if(!campground){
         req.flash("error", "Campground not found!")
         return res.redirect("/campgrounds");
-    }
+    } 
     res.render("campgrounds/show", {campground})
+    } catch (e){
+        next(e);
+    }
 }
 
 module.exports.renderEditForm = async (req,res) => {
@@ -43,7 +56,19 @@ module.exports.renderEditForm = async (req,res) => {
 
 module.exports.updateCampground = async (req,res) => {
     const {id} = req.params;
-    const campground = await Campground.findByIdAndUpdate(id, {...req.body.campground} ) 
+    console.log(req.body); 
+    const campground = await Campground.findByIdAndUpdate(id, {...req.body.campground}); 
+    const imgs = req.files.map(f => ({url: f.path, filename: f.filename})); // makes an array of objects
+    campground.images.push(...imgs); 
+    //spread: passes data from objects as separate arguments instead of pushing an array into an array (won't be accepted bc model is expecting an array of strings not an array of objects )
+    await campground.save();
+    if(req.body.deleteImages){
+        for(let filename of req.body.deleteImages) {
+            await cloudinary.uploader.destroy(filename);
+        }
+        console.log(req.body)
+        await campground.updateOne({$pull: {images: {filename: {$in: req.body.deleteImages}}}});
+    } 
     req.flash("success", "Campground updated!");
     res.redirect(`/campgrounds/${campground._id}`)
 }
@@ -51,6 +76,6 @@ module.exports.updateCampground = async (req,res) => {
 module.exports.deleteCampground = async (req,res) => {
     const {id} = req.params;
     await Campground.findByIdAndDelete(id);
-    req.flash("success", "Campground deleted!")
-    res.redirect("/campgrounds")
+    req.flash("success", "Campground deleted!");
+    res.redirect("/campgrounds");
 }

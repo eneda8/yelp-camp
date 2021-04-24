@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV !== "production") {
+    require("dotenv").config();
+}
+
 const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
@@ -33,7 +37,7 @@ app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-app.use(express.urlencoded({extended: true})); //allows body to be parsed so we can use req.body
+app.use(express.urlencoded({extended: true})); 
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -59,7 +63,10 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
     if (!['/login', '/register', '/'].includes(req.originalUrl)) {
-        req.session.returnTo = req.originalUrl;
+        req.session.previousReturnTo = req.session.returnTo; // store the previous url
+        req.session.returnTo = req.originalUrl; // assign a new url
+        console.log('req.session.previousReturnTo', req.session.previousReturnTo)
+        console.log('req.session.returnTo', req.session.returnTo);
     }
     console.log(req.originalUrl);
     res.locals.currentUser = req.user;
@@ -77,6 +84,8 @@ app.get("/", (req,res) => {
 })
 
 app.all("*", (req, res, next) => {
+    req.session.returnTo = req.session.previousReturnTo;
+    console.log('Previous returnTo reset to:', req.session.returnTo )
     next(new ExpressError("Page Not Found", 404))
 })
 
