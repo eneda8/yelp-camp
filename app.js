@@ -70,6 +70,7 @@ const scriptSrcUrls = [
     "https://kit.fontawesome.com",
     "https://cdnjs.cloudflare.com",
     "https://cdn.jsdelivr.net",
+    "https://code.jquery.com"
 ];
 const styleSrcUrls = [
     "https://kit-free.fontawesome.com",
@@ -78,7 +79,7 @@ const styleSrcUrls = [
     "https://api.tiles.mapbox.com",
     "https://fonts.googleapis.com",
     "https://use.fontawesome.com",
-    "https://cdn.jsdelivr.net"
+    "https://cdn.jsdelivr.net",
 ];
 const connectSrcUrls = [
     "https://api.mapbox.com",

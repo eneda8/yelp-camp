@@ -8,3 +8,20 @@
     height: 300px;
     margin-bottom: 8px;
 }
+
+main {
+    zoom: 80%;
+}
+
+.nav-link {
+    border-bottom: 0.2rem solid transparent;
+}
+
+.nav-link:hover{
+    border-bottom-color:rgba(255,255,255,0.5);
+}
+
+#reviews {
+    zoom: 80%;
+}
+

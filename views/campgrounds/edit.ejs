@@ -1,7 +1,7 @@
 <% layout("layouts/boilerplate")%>
 <div class="row">
-    <h1 class="text-center">Edit Campground</h1>
     <div class="col-md-6 offset-md-3">
+        <h4 class="text-center">Edit Campground</h4>
         <form action="/campgrounds/<%=campground._id%>?_method=PUT" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
             <div class="mb-3">
                 <label class="form-label" for="title">Title</label>
@@ -34,7 +34,7 @@
                     <label class="custom-file-label" for="customFile">Add image(s)...</label>            
                 </div>
                 <img class="img-fluid my-2" id="preview" width="100px"/> 
-                <p class="">Delete images: </p>
+                <p class="">Select images to delete: </p>
                 <div class="row row-cols-1 row-cols-md-4 g-4 mb-3">
                 <% campground.images.forEach((image, i) => { %>
                     <div class="col">
