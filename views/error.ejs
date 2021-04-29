@@ -3,8 +3,12 @@
 <div class="row">
     <div class="col-6 offset-3">
         <div class="alert alert-danger" role="alert">
-            <h4 class="alert-heading"><%=err.message%></h4>
+            <h4 class="alert-heading"><%=err%>.</h4>
+            <% if(process.env.NODE_ENV !== "production") { %> 
             <p><pre><%=err.stack%></pre></p>
+            <% } %> 
         </div>
+        <a class="d-inline ml-2 mr-5" href="/campgrounds/new">Back to New Campground</a>
+        <a class="d-inline ml-5" href="/campgrounds">All Campgrounds</a>
     </div>
 </div>
